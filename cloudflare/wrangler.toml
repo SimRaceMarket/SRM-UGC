@@ -1,0 +1,14 @@
+name = "srm-api"
+main = "src/index.ts"
+compatibility_date = "2024-04-03"
+
+kv_namespaces = [
+  { binding = "SRM_COUNTS", id = "REPLACE_WITH_KV_ID_COUNTS" },
+  { binding = "SRM_RATELIMIT", id = "REPLACE_WITH_KV_ID_RATELIMIT" }
+]
+
+[vars]
+GH_OWNER = "SimRaceMarket"        # <— your org/user
+GH_REPO  = "SRM-UGC"              # <— repo with approved.json
+MAX_FILE_BYTES = 10000000
+ALLOWED_ORIGINS = "https://www.simracemarket.com,https://simracemarket.com,https://*.framer.app"
