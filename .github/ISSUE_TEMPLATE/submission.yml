@@ -1,0 +1,25 @@
+name: Community Submission
+description: Submit setups, mods, guides, liveries, tracks
+title: "[SUBMISSION] <Your Title>"
+labels: ["ugc","pending"]
+body:
+  - type: input
+    id: title
+    attributes: { label: Title, placeholder: e.g., GT3 Setup - Silverstone }
+    validations: { required: true }
+  - type: dropdown
+    id: category
+    attributes: { label: Category, options: [setup, mod, guide, 3dprint, livery, track] }
+    validations: { required: true }
+  - type: dropdown
+    id: game
+    attributes: { label: Game/Sim, options: [ac, acc, rf2, iracing, ams2, f1, dirt, other] }
+    validations: { required: true }
+  - type: input
+    id: author
+    attributes: { label: Author, placeholder: Your name/handle }
+    validations: { required: true }
+  - type: textarea
+    id: description
+    attributes: { label: Description, placeholder: Describe your content }
+    validations: { required: true }
