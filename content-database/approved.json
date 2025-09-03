@@ -1,6 +1,23 @@
 {
   "items": [
     {
+      "id": 4,
+      "title": "iRacing Setup | Porsche 911 GT3 R (992) @ Spa",
+      "category": "setup",
+      "game": "iracing",
+      "description": "Hello, I'm Miguel San Martin, I have been in sim racing for 10 years now and I managed to gain a lot of experience in terms of racing experience and setup manufacturing. \r\n\r\nThis .sto file has been setup for use with the Porsche 911 GT3 R (992) @ Spa",
+      "author": "Miguel San Martin",
+      "date": "2025-09-03",
+      "downloads": 0,
+      "likes": 0,
+      "files": [
+        {
+          "name": "Porsche_911_GT3_R__992_Spa2025S3Baseline.sto",
+          "url": "https://github.com/SimRaceMarket/SRM-UGC/releases/download/ugc-uploads-2025-09/Porsche_911_GT3_R__992_Spa2025S3Baseline.sto"
+        }
+      ]
+    },
+    {
       "id": 3,
       "title": "iRacing Setup | Porsche 911 GT3 R (992) @ Spa",
       "category": "setup",
