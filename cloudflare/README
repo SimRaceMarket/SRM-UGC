@@ -1,0 +1,16 @@
+## Deploy
+npm i -D wrangler typescript
+# Create KV namespaces; paste their IDs into wrangler.toml
+wrangler kv:namespace create SRM_COUNTS
+wrangler kv:namespace create SRM_RATELIMIT
+
+# Secrets
+wrangler secret put GH_TOKEN          # fine-grained PAT with: contents:rw, issues:rw, actions:rw, releases:rw
+# Optional spam protection:
+# wrangler secret put HCAPTCHA_SECRET
+
+# Dev and publish
+wrangler dev
+wrangler publish
+
+# In Cloudflare dashboard, map api.simracemarket.com to this Worker (or add a route in wrangler.toml).
