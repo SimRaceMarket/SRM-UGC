@@ -1,0 +1,29 @@
+name: Build approved.json
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
+  issues:
+    types: [labeled, unlabeled, edited, opened, closed, reopened]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: read
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm i @octokit/rest
+      - run: node scripts/build-approved.mjs
+      - name: Commit changes
+        run: |
+          git config user.name "srm-bot"
+          git config user.email "bot@simracemarket.com"
+          git add content-database/approved.json
+          git commit -m "Update approved.json [skip ci]" || echo "No changes"
+          git push
