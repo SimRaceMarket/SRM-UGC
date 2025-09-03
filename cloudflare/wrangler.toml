@@ -3,8 +3,8 @@ main = "src/index.ts"
 compatibility_date = "2024-04-03"
 
 kv_namespaces = [
-  { binding = "SRM_COUNTS", id = "REPLACE_WITH_KV_ID_COUNTS" },
-  { binding = "SRM_RATELIMIT", id = "REPLACE_WITH_KV_ID_RATELIMIT" }
+  { binding = "SRM_COUNTS", id = "3e9378b112424577b8b855b7b0b35ffb" },
+  { binding = "SRM_RATELIMIT", id = "83150df80d6c4cda8ba890836b129a79" }
 ]
 
 [vars]
