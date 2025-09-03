@@ -160,6 +160,6 @@ export default {
       if (url.pathname === "/download" && req.method === "GET")  return await handleDownload(env, url, cors)
       if (url.pathname === "/submit"   && req.method === "POST") return await handleSubmit(env, req, cors)
       return new Response("Not found", { status: 404, headers: cors })
-    } catch (e:any) { return err(500, e?.message || \"Server error\", cors) }
+    } catch (e:any) { return err(500, (e as any)?.message || "Server error", cors) }
   }
 }
