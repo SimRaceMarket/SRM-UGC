@@ -10,5 +10,5 @@ kv_namespaces = [
 [vars]
 GH_OWNER = "SimRaceMarket"        # <— your org/user
 GH_REPO  = "SRM-UGC"              # <— repo with approved.json
-MAX_FILE_BYTES = 100000000
+MAX_FILE_BYTES = 104857600
 ALLOWED_ORIGINS = "https://www.simracemarket.com,https://simracemarket.com,https://*.framer.app"
