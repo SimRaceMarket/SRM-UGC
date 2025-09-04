@@ -2,13 +2,32 @@ name = "srm-api"
 main = "src/index.ts"
 compatibility_date = "2024-04-03"
 
+# Production route configuration
+# Make sure your domain points to Cloudflare and add this custom domain in the dashboard
+routes = [
+  { pattern = "srm-api.accounts-4bf.workers.dev/*", zone_name = "" }
+]
+
 kv_namespaces = [
   { binding = "SRM_COUNTS", id = "3e9378b112424577b8b855b7b0b35ffb" },
   { binding = "SRM_RATELIMIT", id = "83150df80d6c4cda8ba890836b129a79" }
 ]
 
 [vars]
-GH_OWNER = "SimRaceMarket"        # <— your org/user
-GH_REPO  = "SRM-UGC"              # <— repo with approved.json
-MAX_FILE_BYTES = 104857600
-ALLOWED_ORIGINS = "https://www.simracemarket.com,https://simracemarket.com,https://*.framer.app"
+# GitHub Configuration
+GH_OWNER = "SimRaceMarket"
+GH_REPO = "SRM-UGC"
+
+# File Upload Limits
+MAX_FILE_BYTES = "104857600"  # 100MB per file
+
+# CORS Configuration - Update with your actual domains
+ALLOWED_ORIGINS = "https://www.simracemarket.com,https://simracemarket.com,https://*.framer.app,https://*.framer.website,https://framer.com"
+
+# Rate Limiting
+MAX_SUBMISSIONS_PER_DAY = "100"
+MAX_LIKES_PER_HOUR = "500"
+
+# Cache Configuration
+CONTENT_CACHE_TTL = "300"    # 5 minutes
+DOWNLOAD_CACHE_TTL = "86400" # 24 hours
