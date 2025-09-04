@@ -1,7 +1,4 @@
-/**
- * Build content-database/approved.json by reading issues labeled "approved".
- * Expects a JSON code block in the body (created by the Worker).
- */
+// Enhanced version of your build-approved.mjs
 import { Octokit } from "@octokit/rest"
 import fs from "fs"
 import path from "path"
@@ -34,18 +31,59 @@ for await (const issue of listApprovedIssues()) {
   const id = issue.number
   const date = issue.created_at?.slice(0,10) || new Date().toISOString().slice(0,10)
   const title = meta.title || issue.title?.replace(/^\[[^\]]+\]\s*/, "") || `Item #${id}`
+  
+  // Enhanced data structure
   items.push({
     id,
     title,
     category: meta.category || "submission",
     game: meta.game || "other",
     description: meta.description || "",
+    longDescription: meta.longDescription || meta.description || "",
     author: meta.author || issue.user?.login || "unknown",
     date,
+    lastUpdated: issue.updated_at?.slice(0,10) || date,
     downloads: 0,
     likes: 0,
-    files: (meta.files || []).map(f => ({ name: f.name, url: f.url }))
+    rating: meta.rating || 0,
+    totalRatings: meta.totalRatings || 0,
+    version: meta.version || "1.0",
+    fileSize: calculateTotalSize(meta.files || []),
+    compatibility: meta.compatibility || [],
+    requirements: meta.requirements || [],
+    installation: meta.installation || [],
+    tags: meta.tags || [],
+    files: (meta.files || []).map(f => ({
+      name: f.name,
+      url: f.url,
+      size: f.size || "Unknown",
+      type: f.type || getFileType(f.name),
+      description: f.description || ""
+    })),
+    screenshots: meta.screenshots || [],
+    changelog: meta.changelog || []
   })
+}
+
+function calculateTotalSize(files) {
+  const total = files.reduce((sum, f) => sum + (f.size || 0), 0)
+  if (total === 0) return "Unknown"
+  return total > 1024 * 1024 
+    ? `${(total / (1024 * 1024)).toFixed(1)} MB`
+    : `${(total / 1024).toFixed(1)} KB`
+}
+
+function getFileType(filename) {
+  const ext = filename.split('.').pop()?.toLowerCase()
+  const types = {
+    json: "Setup File",
+    zip: "Archive",
+    pdf: "Documentation",
+    stl: "3D Model",
+    txt: "Text File",
+    ini: "Config File"
+  }
+  return types[ext] || "File"
 }
 
 const out = { items }
