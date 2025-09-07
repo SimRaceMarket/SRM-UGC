@@ -3,35 +3,30 @@
     {
       "id": 5,
       "title": "Assetto Corsa Competizione Setup Guide",
-      "category": "guide",
-      "game": "acc",
-      "description": "Non-Official Setup Guide for Assetto Corsa Competizione",
-      "longDescription": "Non-Official Setup Guide for Assetto Corsa Competizione",
-      "author": "Adam Isailovic",
-      "date": "2025-09-07",
-      "lastUpdated": "2025-09-07",
-      "downloads": 0,
-      "likes": 0,
-      "rating": 0,
-      "totalRatings": 0,
-      "version": "1.0",
-      "fileSize": "17.4 MB",
-      "compatibility": [],
-      "requirements": [],
-      "installation": [],
-      "tags": [],
-      "files": [
-        {
-          "name": "ACC_Setup_Guide.pdf",
-          "url": "https://github.com/SimRaceMarket/SRM-UGC/releases/download/ugc-uploads-2025-09/ACC_Setup_Guide.pdf",
-          "size": 18240323,
-          "type": "Documentation",
-          "description": ""
-        }
-      ],
-      "screenshots": [],
-      "changelog": []
-    },
+  "category": "guide",
+  "game": "acc",
+  "description": "Non-Official Setup Guide for Assetto Corsa Competizione",
+  "longDescription": "",
+  "author": "Adam Isailovic",
+  "version": "1.5",
+  "car": "",
+  "track": "",
+  "compatibility": "ACC v1.9+",
+  "requirements": [],
+  "installation": [],
+  "tags": ["acc","setup guide","gt3"],
+  "mediaUrls": [],
+  "license": "CC BY 4.0",
+  "notes": "Anything else…",
+  "files": [
+    {
+      "name": "ACC_Setup_Guide.pdf",
+      "url": "https://github.com/SimRaceMarket/SRM-UGC/releases/download/ugc-uploads-2025-09/ACC_Setup_Guide.pdf",
+      "size": 18240323,
+      "type": "Documentation"
+    }
+  ]
+},
     {
       "id": 2,
       "title": "iRacing Setup | Porsche 911 GT3 R (992) @ Spa",
