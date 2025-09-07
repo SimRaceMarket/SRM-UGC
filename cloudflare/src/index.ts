@@ -65,13 +65,15 @@ async function handleContent(env: Env, cors: Headers) {
     const [likes, downloads, rating] = await Promise.all([
       env.SRM_COUNTS.get(`likes:${id}`),
       env.SRM_COUNTS.get(`downloads:${id}`),
-      env.SRM_COUNTS.get(`rating:${id}`)
+      env.SRM_COUNTS.get(`rating:${id}`),
+      env.SRM_COUNTS.get(`rating_count:${id}`)
     ])
     return { 
       ...it, 
       likes: Number(likes || it.likes || 0), 
       downloads: Number(downloads || it.downloads || 0),
-      rating: rating ? Number(rating) : (it.rating || 0)
+      rating: rating ? Number(rating) : (it.rating || 0),
+      totalRatings: Number(totalRatings || it.totalRatings || 0)
     }
   }))
   return ok({ items: merged }, cors)
