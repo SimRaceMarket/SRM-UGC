@@ -1,14 +1,8 @@
 /* eslint-disable no-console */
 
-// -------------------------------
-// Helpers & constants
-// -------------------------------
-
-const RAW_BASE = (env: Env) =>
-  `https://raw.githubusercontent.com/${env.GH_OWNER}/${env.GH_REPO}/main/content-database/approved.json`;
-const API_BASE = (env: Env) => `https://api.github.com/repos/${env.GH_OWNER}/${env.GH_REPO}`;
-const UPLOAD_BASE = (env: Env, relId: number | string) =>
-  `https://uploads.github.com/repos/${env.GH_OWNER}/${env.GH_REPO}/releases/${relId}/assets`;
+// ------------------------------------
+// Types
+// ------------------------------------
 
 type Json = Record<string, any>;
 
@@ -42,9 +36,15 @@ type FileMeta = {
   type: string;
 };
 
-// -------------------------------
-// Small utilities
-// -------------------------------
+// ------------------------------------
+// Helpers & constants
+// ------------------------------------
+
+const RAW_BASE = (env: Env) =>
+  `https://raw.githubusercontent.com/${env.GH_OWNER}/${env.GH_REPO}/main/content-database/approved.json`;
+const API_BASE = (env: Env) => `https://api.github.com/repos/${env.GH_OWNER}/${env.GH_REPO}`;
+const UPLOAD_BASE = (env: Env, relId: number | string) =>
+  `https://uploads.github.com/repos/${env.GH_OWNER}/${env.GH_REPO}/releases/${relId}/assets`;
 
 const norm = (v: unknown) => String(v ?? "").trim();
 const splitCSV = (v: unknown) => norm(v).split(",").map((s) => s.trim()).filter(Boolean);
@@ -149,9 +149,32 @@ function bullets(meta: Record<string, any>) {
   return lines.join("\n");
 }
 
-// -------------------------------
-// Core handlers
-// -------------------------------
+function issueSummary(meta: Record<string, any>, files: FileMeta[]) {
+  const bodyBlock = "```json\n" + JSON.stringify({ ...meta, files }, null, 2) + "\n```";
+  return `${bullets(meta)}
+
+**Short Description:**
+${meta.description || "-"}
+
+${meta.longDescription ? `**Details:**\n${meta.longDescription}\n` : ""}
+
+**Installation**
+${Array.isArray(meta.installation) && meta.installation.length ? meta.installation.map((s: string, i: number) => `${i + 1}. ${s}`).join("\n") : "—"}
+
+**Requirements**
+${Array.isArray(meta.requirements) && meta.requirements.length ? meta.requirements.map((s: string) => `- ${s}`).join("\n") : "—"}
+
+Assets attached via release.
+
+---
+${bodyBlock}
+
+*Created via SRM API.*`;
+}
+
+// ------------------------------------
+// Content read endpoints
+// ------------------------------------
 
 async function handleContent(env: Env, cors: Headers) {
   const r = await fetch(RAW_BASE(env), { cf: { cacheTtl: 300, cacheEverything: true } });
@@ -203,6 +226,10 @@ async function handleContentById(env: Env, id: string, cors: Headers) {
   return ok(enhanced, cors);
 }
 
+// ------------------------------------
+// Social interactions
+// ------------------------------------
+
 async function handleLike(env: Env, req: Request, cors: Headers) {
   const body = (await req.json().catch(() => ({}))) as Json;
   const id = String(body.id || "");
@@ -239,6 +266,10 @@ async function handleRate(env: Env, req: Request, cors: Headers) {
   return ok({ ok: true, id, rating: Number(newRating.toFixed(1)), totalRatings: newCount }, cors);
 }
 
+// ------------------------------------
+// Stats
+// ------------------------------------
+
 async function handleStats(env: Env, cors: Headers) {
   const r = await fetch(RAW_BASE(env), { cf: { cacheTtl: 300, cacheEverything: true } });
   if (!r.ok) return err(502, "Upstream fetch failed", cors);
@@ -269,6 +300,10 @@ async function handleStats(env: Env, cors: Headers) {
   return ok(stats, cors);
 }
 
+// ------------------------------------
+// Submission flow
+// ------------------------------------
+
 async function monthlyRelease(env: Env, token: string) {
   const now = new Date();
   const tag = `ugc-uploads-${now.getUTCFullYear()}-${String(now.getUTCMonth() + 1).padStart(2, "0")}`;
@@ -293,29 +328,6 @@ async function monthlyRelease(env: Env, token: string) {
   });
   if (!r.ok) throw new Error("Failed to create release");
   return (await r.json()).id;
-}
-
-function issueSummary(meta: Record<string, any>, files: FileMeta[]) {
-  const bodyBlock = "```json\n" + JSON.stringify({ ...meta, files }, null, 2) + "\n```";
-  return `${bullets(meta)}
-
-**Short Description:**
-${meta.description || "-"}
-
-${meta.longDescription ? `**Details:**\n${meta.longDescription}\n` : ""}
-
-**Installation**
-${Array.isArray(meta.installation) && meta.installation.length ? meta.installation.map((s: string, i: number) => `${i + 1}. ${s}`).join("\n") : "—"}
-
-**Requirements**
-${Array.isArray(meta.requirements) && meta.requirements.length ? meta.requirements.map((s: string) => `- ${s}`).join("\n") : "—"}
-
-Assets attached via release.
-
----
-${bodyBlock}
-
-*Created via SRM API.*`;
 }
 
 async function createIssue(env: Env, token: string, meta: Record<string, any>, files: FileMeta[]) {
@@ -456,11 +468,9 @@ async function handleSubmit(env: Env, req: Request, cors: Headers) {
   );
 }
 
-// -------------------------------
+// ------------------------------------
 // Router
-// -------------------------------
-
-const ALLOWED_ASSET_HOSTS_LIST = Array.from(ALLOWED_ASSET_HOSTS);
+// ------------------------------------
 
 export default {
   async fetch(req: Request, env: Env): Promise<Response> {
@@ -493,10 +503,6 @@ export default {
       }
       if (url.pathname === "/stats" && req.method === "GET") {
         return await handleStats(env, cors);
-      }
-      // simple introspection route (optional)
-      if (url.pathname === "/allowed-asset-hosts" && req.method === "GET") {
-        return ok({ hosts: ALLOWED_ASSET_HOSTS_LIST }, cors);
       }
       return new Response("Not found", { status: 404, headers: cors });
     } catch (e: any) {
