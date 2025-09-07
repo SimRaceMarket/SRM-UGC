@@ -15,15 +15,30 @@ jobs:
       issues: read
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0         # ensure history for safe push
+
       - uses: actions/setup-node@v4
         with:
           node-version: 20
+
       - run: npm i @octokit/rest
-      - run: node scripts/build-approved.mjs
+
+      - name: Build approved.json
+        run: node scripts/build-approved.mjs
+        env:
+          # pass repo & token to the script
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          # Optional: override output path if you keep the script elsewhere
+          # OUT_FILE: content-database/approved.json
+
       - name: Commit changes
         run: |
           git config user.name "srm-bot"
           git config user.email "bot@simracemarket.com"
           git add content-database/approved.json
-          git commit -m "Update approved.json [skip ci]" || echo "No changes"
+          git diff --cached --quiet && echo "No changes" && exit 0
+          git commit -m "Update approved.json [skip ci]"
+          git pull --rebase
           git push
