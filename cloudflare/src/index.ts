@@ -62,7 +62,8 @@ async function handleContent(env: Env, cors: Headers) {
   const merged = await Promise.all(items.map(async (it: any) => {
     const id = String(it.id ?? it.number ?? "")
     if (!id) return it
-    const [likes, downloads, rating] = await Promise.all([
+    // Fix: Destructure 4 variables to match 4 Promise.all calls
+    const [likes, downloads, rating, totalRatings] = await Promise.all([
       env.SRM_COUNTS.get(`likes:${id}`),
       env.SRM_COUNTS.get(`downloads:${id}`),
       env.SRM_COUNTS.get(`rating:${id}`),
@@ -73,7 +74,7 @@ async function handleContent(env: Env, cors: Headers) {
       likes: Number(likes || it.likes || 0), 
       downloads: Number(downloads || it.downloads || 0),
       rating: rating ? Number(rating) : (it.rating || 0),
-      totalRatings: Number(totalRatings || it.totalRatings || 0)
+      totalRatings: Number(totalRatings || it.totalRatings || 0)  // Now totalRatings is defined
     }
   }))
   return ok({ items: merged }, cors)
@@ -187,6 +188,27 @@ async function handleStats(env: Env, cors: Headers) {
   }
   
   return ok(stats, cors)
+}
+
+// ADD THIS NEW FUNCTION - Data migration to fix existing rating data
+async function handleDataMigration(env: Env, cors: Headers) {
+  const sum = await env.SRM_COUNTS.get(`rating_sum:2`)
+  const count = await env.SRM_COUNTS.get(`rating_count:2`)
+  
+  if (sum && count) {
+    const average = Number(sum) / Number(count)
+    await env.SRM_COUNTS.put(`rating:2`, String(average.toFixed(1)))
+    
+    return ok({ 
+      message: "Migration completed", 
+      itemId: "2",
+      sum: Number(sum),
+      count: Number(count),
+      calculatedRating: Number(average.toFixed(1))
+    }, cors)
+  }
+  
+  return err(404, "No rating data found to migrate", cors)
 }
 
 function sanitize(name: string) { 
@@ -416,6 +438,11 @@ export default {
       // Stats endpoint
       if (url.pathname === "/stats" && req.method === "GET") {
         return await handleStats(env, cors)
+      }
+      
+      // ADDED: Data migration endpoint (temporary)
+      if (url.pathname === "/migrate-data" && req.method === "POST") {
+        return await handleDataMigration(env, cors)
       }
       
       return new Response("Not found", { status: 404, headers: cors })
