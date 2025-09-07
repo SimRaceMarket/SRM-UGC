@@ -353,7 +353,7 @@ function getFileType(filename: string): string {
     json: "Setup File",
     zip: "Archive", 
     rar: "Archive",
-    7z: "Archive",
+    "7z": "Archive",
     pdf: "Documentation",
     txt: "Text File",
     md: "Documentation",
