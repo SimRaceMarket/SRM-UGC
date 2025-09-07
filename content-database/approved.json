@@ -1,7 +1,7 @@
 {
   "items": [
     {
-      "id": 5,
+      "id": 7,
       "title": "Assetto Corsa Competizione Setup Guide",
       "category": "guide",
       "game": "acc",
@@ -14,16 +14,23 @@
       "likes": 0,
       "rating": 0,
       "totalRatings": 0,
-      "version": "1.0",
+      "version": "1.5",
       "fileSize": "17.4 MB",
       "compatibility": [],
       "requirements": [],
       "installation": [],
-      "tags": [],
+      "tags": [
+        "acc",
+        "gt3",
+        "setup guide"
+      ],
+      "mediaUrls": [],
+      "license": "",
+      "notes": "",
       "files": [
         {
-          "name": "ACC_Setup_Guide.pdf",
-          "url": "https://github.com/SimRaceMarket/SRM-UGC/releases/download/ugc-uploads-2025-09/ACC_Setup_Guide.pdf",
+          "name": "ACC_Setup_Guide-2.pdf",
+          "url": "https://github.com/SimRaceMarket/SRM-UGC/releases/download/ugc-uploads-2025-09/ACC_Setup_Guide-2.pdf",
           "size": 18240323,
           "type": "Documentation",
           "description": ""
@@ -76,6 +83,9 @@
         "hotlap",
         "baseline"
       ],
+      "mediaUrls": [],
+      "license": "",
+      "notes": "",
       "files": [
         {
           "name": "Porsche_911_GT3_R__992_Spa2025S3Baseline.sto",
